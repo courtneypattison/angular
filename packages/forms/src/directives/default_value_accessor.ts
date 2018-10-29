@@ -27,20 +27,24 @@ function _isAndroid(): boolean {
 
 /**
  * Turn this mode on if you want form directives to buffer IME input until compositionend
- * @experimental
+ * @publicApi
  */
 export const COMPOSITION_BUFFER_MODE = new InjectionToken<boolean>('CompositionEventMode');
 
 /**
  * The default accessor for writing a value and listening to changes that is used by the
- * {@link NgModel}, {@link FormControlDirective}, and {@link FormControlName} directives.
+ * `NgModel`, `FormControlDirective`, and `FormControlName` directives.
  *
- *  ### Example
- *  ```
- *  <input type="text" name="searchQuery" ngModel>
- *  ```
+ * @usageNotes
+ * ### Example
  *
- *  @stable
+ * ```
+ * <input type="text" name="searchQuery" ngModel>
+ * ```
+ *
+ * @ngModule FormsModule
+ * @ngModule ReactiveFormsModule
+ * @publicApi
  */
 @Directive({
   selector:

@@ -1,11 +1,9 @@
-load("@build_bazel_rules_typescript//:defs.bzl", "ts_library", "ts_web_test")
-load("@build_bazel_rules_nodejs//:defs.bzl", "jasmine_node_test")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library", "ts_web_test_suite")
 
 ts_library(
     name = "test_lib",
-    testonly = 1,
+    testonly = True,
     srcs = glob(["**/*.ts"]),
-    tsconfig = "//packages:tsconfig",
     deps = [
         "//packages:types",
         "//packages/core",
@@ -19,15 +17,16 @@ ts_library(
     ],
 )
 
-ts_web_test(
+ts_web_test_suite(
     name = "test_web",
-    bootstrap = [
-        "//:web_test_bootstrap_scripts",
-        "//:angularjs",
+    static_files = [
+        "//:angularjs_scripts",
     ],
-    # do not sort
+    tags = [
+        "fixme-ivy-aot",
+        "fixme-ivy-jit",
+    ],
     deps = [
-        "//tools/testing:browser",
         ":test_lib",
     ],
 )

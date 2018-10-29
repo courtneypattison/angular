@@ -11,8 +11,6 @@ import {CollectorOptions, METADATA_VERSION} from '@angular/compiler-cli';
 import {MetadataCollector} from '@angular/compiler-cli/src/metadata/collector';
 import * as ts from 'typescript';
 
-
-
 // This matches .ts files but not .d.ts files.
 const TS_EXT = /(^.|(?!\.d)..)\.ts$/;
 
@@ -495,6 +493,8 @@ export class MockStaticSymbolResolverHost implements StaticSymbolResolverHost {
   }
 
   getMetadataFor(moduleId: string): any { return this._getMetadataFor(moduleId); }
+
+  getOutputName(filePath: string): string { return filePath; }
 
   private _getMetadataFor(filePath: string): any {
     if (this.data[filePath] && filePath.match(TS_EXT)) {

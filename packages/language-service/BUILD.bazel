@@ -1,6 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@build_bazel_rules_typescript//:defs.bzl", "ts_library")
+load("//tools:defaults.bzl", "npm_package", "ts_library")
 
 ts_library(
     name = "language-service",
@@ -11,11 +11,24 @@ ts_library(
         ],
     ),
     module_name = "@angular/language-service",
-    tsconfig = "//packages:tsconfig",
     deps = [
         "//packages:types",
         "//packages/compiler",
         "//packages/compiler-cli",
         "//packages/core",
+        "@ngdeps//@types/node",
+        "@ngdeps//typescript",
+    ],
+)
+
+npm_package(
+    name = "npm_package",
+    srcs = ["package.json"],
+    tags = [
+        "release-with-framework",
+    ],
+    deps = [
+        ":language-service",
+        "//packages/language-service/bundles:language-service",
     ],
 )

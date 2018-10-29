@@ -1,12 +1,21 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@build_bazel_rules_typescript//:defs.bzl", "ts_library")
+exports_files(["package.json"])
 
-ts_library(
+load("//tools:defaults.bzl", "ng_module")
+
+ng_module(
     name = "static",
-    srcs = glob(["**/*.ts"]),
+    # Note: There is Bazel issue where Windows symlinks
+    #       aka. junctions are not traversed by glob.
+    srcs = glob(
+        [
+            "*.ts",
+            "src/common/**/*.ts",
+            "src/static/**/*.ts",
+        ],
+    ),
     module_name = "@angular/upgrade/static",
-    tsconfig = "//packages:tsconfig",
     deps = [
         "//packages/core",
         "//packages/platform-browser",

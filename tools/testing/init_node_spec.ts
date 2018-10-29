@@ -12,6 +12,7 @@ import 'zone.js/dist/proxy.js';
 import 'zone.js/dist/sync-test.js';
 import 'zone.js/dist/async-test.js';
 import 'zone.js/dist/fake-async-test.js';
+import 'zone.js/dist/task-tracking.js';
 import 'reflect-metadata/Reflect';
 
 // This hack is needed to get jasmine, node and zone working inside bazel.
@@ -39,6 +40,9 @@ import 'zone.js/dist/jasmine-patch.js';
 import {TestBed} from '@angular/core/testing';
 import {ServerTestingModule, platformServerTesting} from '@angular/platform-server/testing/src/server';
 import {DominoAdapter} from '@angular/platform-server/src/domino_adapter';
+import {createDocument} from 'domino';
 
 TestBed.initTestEnvironment(ServerTestingModule, platformServerTesting());
 DominoAdapter.makeCurrent();
+(global as any).document =
+    (DominoAdapter as any).defaultDoc || ((DominoAdapter as any).defaultDoc = createDocument());

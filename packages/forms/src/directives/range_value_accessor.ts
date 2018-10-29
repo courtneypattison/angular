@@ -18,12 +18,17 @@ export const RANGE_VALUE_ACCESSOR: StaticProvider = {
 
 /**
  * The accessor for writing a range value and listening to changes that is used by the
- * {@link NgModel}, {@link FormControlDirective}, and {@link FormControlName} directives.
+ * `NgModel`, `FormControlDirective`, and `FormControlName` directives.
  *
- *  ### Example
- *  ```
- *  <input type="range" [(ngModel)]="age" >
- *  ```
+ * @usageNotes
+ * ### Example
+ *
+ * ```
+ * <input type="range" [(ngModel)]="age" >
+ * ```
+ *
+ * @ngModule FormsModule
+ * @ngModule ReactiveFormsModule
  */
 @Directive({
   selector:

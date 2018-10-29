@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 
 import {Adapter, Context} from '../src/adapter';
 import {AssetGroupConfig, Manifest} from '../src/manifest';
@@ -62,10 +62,7 @@ export class MockClients implements Clients {
 
   remove(clientId: string): void { this.clients.delete(clientId); }
 
-  async get(id: string): Promise<Client> {
-    this.add(id);
-    return this.clients.get(id) !as any as Client;
-  }
+  async get(id: string): Promise<Client> { return this.clients.get(id) !as any as Client; }
 
   getMock(id: string): MockClient|undefined { return this.clients.get(id); }
 
@@ -82,7 +79,9 @@ export class SwTestHarness implements ServiceWorkerGlobalScope, Adapter, Context
   private skippedWaiting = true;
 
   private selfMessageQueue: any[] = [];
-  unregistered: boolean;
+  autoAdvanceTime = false;
+  // TODO(issue/24571): remove '!'.
+  unregistered !: boolean;
   readonly notifications: {title: string, options: Object}[] = [];
   readonly registration: ServiceWorkerRegistration = {
     active: {
@@ -190,12 +189,17 @@ export class SwTestHarness implements ServiceWorkerGlobalScope, Adapter, Context
 
   waitUntil(promise: Promise<void>): void {}
 
-  handleFetch(req: Request, clientId?: string): [Promise<Response|undefined>, Promise<void>] {
+  handleFetch(req: Request, clientId: string|null = null):
+      [Promise<Response|undefined>, Promise<void>] {
     if (!this.eventHandlers.has('fetch')) {
       throw new Error('No fetch handler registered');
     }
-    const event = new MockFetchEvent(req, clientId || null);
+    const event = new MockFetchEvent(req, clientId);
     this.eventHandlers.get('fetch') !.call(this, event);
+
+    if (clientId) {
+      this.clients.add(clientId);
+    }
 
     return [event.response, event.ready];
   }
@@ -209,7 +213,7 @@ export class SwTestHarness implements ServiceWorkerGlobalScope, Adapter, Context
       event = new MockMessageEvent(data, null);
     } else {
       this.clients.add(clientId);
-      event = new MockMessageEvent(data, this.clients.getMock(clientId) as any);
+      event = new MockMessageEvent(data, this.clients.getMock(clientId) || null);
     }
     this.eventHandlers.get('message') !.call(this, event);
     return event.ready;
@@ -225,7 +229,7 @@ export class SwTestHarness implements ServiceWorkerGlobalScope, Adapter, Context
   }
 
   timeout(ms: number): Promise<void> {
-    return new Promise(resolve => {
+    const promise = new Promise<void>(resolve => {
       this.timers.push({
         at: this.time + ms,
         duration: ms,
@@ -233,6 +237,12 @@ export class SwTestHarness implements ServiceWorkerGlobalScope, Adapter, Context
         fired: false,
       });
     });
+
+    if (this.autoAdvanceTime) {
+      this.advance(ms);
+    }
+
+    return promise;
   }
 
   advance(by: number): void {
@@ -287,7 +297,8 @@ export class ConfigBuilder {
     const hashTable = {};
     return {
       configVersion: 1,
-      index: '/index.html', assetGroups, hashTable,
+      index: '/index.html', assetGroups,
+      navigationUrls: [], hashTable,
     };
   }
 }

@@ -55,17 +55,18 @@ export class RadioControlRegistry {
 }
 
 /**
- * @whatItDoes  Writes radio control values and listens to radio control changes.
+ * @description
  *
- * Used by {@link NgModel}, {@link FormControlDirective}, and {@link FormControlName}
- * to keep the view synced with the {@link FormControl} model.
+ * Writes radio control values and listens to radio control changes.
  *
- * @howToUse
+ * Used by `NgModel`, `FormControlDirective`, and `FormControlName`
+ * to keep the view synced with the `FormControl` model.
  *
- * If you have imported the {@link FormsModule} or the {@link ReactiveFormsModule}, this
+ * If you have imported the `FormsModule` or the `ReactiveFormsModule`, this
  * value accessor will be active on any radio control that has a form directive. You do
  * **not** need to add a special selector to activate it.
  *
+ * @usageNotes
  * ### How to use radio buttons with form directives
  *
  * To use radio buttons in a template-driven form, you'll want to ensure that radio buttons
@@ -79,9 +80,9 @@ export class RadioControlRegistry {
  *
  * {@example forms/ts/reactiveRadioButtons/reactive_radio_button_example.ts region='Reactive'}
  *
- *  * **npm package**: `@angular/forms`
- *
- *  @stable
+ * @ngModule FormsModule
+ * @ngModule ReactiveFormsModule
+ * @publicApi
  */
 @Directive({
   selector:
@@ -92,16 +93,21 @@ export class RadioControlRegistry {
 export class RadioControlValueAccessor implements ControlValueAccessor,
     OnDestroy, OnInit {
   /** @internal */
-  _state: boolean;
+  // TODO(issue/24571): remove '!'.
+  _state !: boolean;
   /** @internal */
-  _control: NgControl;
+  // TODO(issue/24571): remove '!'.
+  _control !: NgControl;
   /** @internal */
-  _fn: Function;
+  // TODO(issue/24571): remove '!'.
+  _fn !: Function;
   onChange = () => {};
   onTouched = () => {};
 
-  @Input() name: string;
-  @Input() formControlName: string;
+  // TODO(issue/24571): remove '!'.
+  @Input() name !: string;
+  // TODO(issue/24571): remove '!'.
+  @Input() formControlName !: string;
   @Input() value: any;
 
   constructor(

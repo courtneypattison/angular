@@ -23,22 +23,23 @@ export const formDirectiveProvider: any = {
 };
 
 /**
- * @whatItDoes Binds an existing {@link FormGroup} to a DOM element.
+ * @description
  *
- * @howToUse
+ * Binds an existing `FormGroup` to a DOM element.
  *
- * This directive accepts an existing {@link FormGroup} instance. It will then use this
- * {@link FormGroup} instance to match any child {@link FormControl}, {@link FormGroup},
- * and {@link FormArray} instances to child {@link FormControlName}, {@link FormGroupName},
- * and {@link FormArrayName} directives.
+ * This directive accepts an existing `FormGroup` instance. It will then use this
+ * `FormGroup` instance to match any child `FormControl`, `FormGroup`,
+ * and `FormArray` instances to child `FormControlName`, `FormGroupName`,
+ * and `FormArrayName` directives.
  *
+ * @usageNotes
  * **Set value**: You can set the form's initial value when instantiating the
- * {@link FormGroup}, or you can set it programmatically later using the {@link FormGroup}'s
+ * `FormGroup`, or you can set it programmatically later using the `FormGroup`'s
  * {@link AbstractControl#setValue setValue} or {@link AbstractControl#patchValue patchValue}
  * methods.
  *
  * **Listen to value**: If you want to listen to changes in the value of the form, you can subscribe
- * to the {@link FormGroup}'s {@link AbstractControl#valueChanges valueChanges} event.  You can also
+ * to the `FormGroup`'s {@link AbstractControl#valueChanges valueChanges} event.  You can also
  * listen to its {@link AbstractControl#statusChanges statusChanges} event to be notified when the
  * validation status is re-calculated.
  *
@@ -52,11 +53,8 @@ export const formDirectiveProvider: any = {
  *
  * {@example forms/ts/simpleFormGroup/simple_form_group_example.ts region='Component'}
  *
- * **npm package**: `@angular/forms`
- *
- * **NgModule**: {@link ReactiveFormsModule}
- *
- *  @stable
+ * @ngModule ReactiveFormsModule
+ * @publicApi
  */
 @Directive({
   selector: '[formGroup]',
@@ -68,7 +66,8 @@ export class FormGroupDirective extends ControlContainer implements Form,
     OnChanges {
   public readonly submitted: boolean = false;
 
-  private _oldForm: FormGroup;
+  // TODO(issue/24571): remove '!'.
+  private _oldForm !: FormGroup;
   directives: FormControlName[] = [];
 
   @Input('formGroup') form: FormGroup = null !;
